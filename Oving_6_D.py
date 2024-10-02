@@ -14,9 +14,9 @@ with open("temperatur_trykk_met_samme_rune_time_datasett.csv.txt", "r") as fil:
             temperatur = Del[3].replace(',', '.')
             try:
                 if "am" in tid or "pm" in tid:
-                    dato_obj = datetime.datetime.strptime(tid, "%m/%d/%Y %I:%M:%S %p")
+                    dato_obj = datetime.datetime.strptime(tid, "%d/%m/%Y %I:%M:%S %p")
                 else:
-                    dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
+                    dato_obj = datetime.datetime.strptime(tid, "%d.%m.%Y %H:%M")
                 
                 tid_standard = dato_obj.strftime("%Y-%m-%d %H:%M:%S")
                 temperatur_float = float(temperatur)
