@@ -73,12 +73,34 @@ tider_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tide
 n=30
 gyldige_tider, gjennomsnitt = glidende_gjennomsnitt(tider_dt, temperaturer, n)
 
+start_tid = datetime.datetime(2021, 6, 11, 17, 31)
+slutt_tid = datetime.datetime(2021, 6, 12, 3, 5)
+
+temperaturer_uis_filtered = []
+tider_uis_filtered = []
+
+for tid, temperatur in zip(tider_dt, temperaturer):
+    if start_tid <= tid <= slutt_tid:
+        tider_uis_filtered.append(tid)
+        temperaturer_uis_filtered.append(temperatur)
+
+if temperaturer_uis_filtered:
+    max_temp = max(temperaturer_uis_filtered)
+    min_temp = min(temperaturer_uis_filtered)
+
+  temperaturfall_tider = [start_tid, slutt_tid]
+    temperaturfall_values = [max_temp, min_temp]
+else:
+    temperaturfall_tider = []
+    temperaturfall_values = []
+
 plt.figure(figsize=(10, 5))
 plt.subplot(2, 1, 1)
 plt.title("Temperaturmålinger fra to kilder")
 plt.plot(tider_met_dt, temperaturer_met, label="Måling fra Solas værstasjon")
 plt.plot(tider_dt, temperaturer, label="Måling fra UiS")
 plt.plot(gyldige_tider, gjennomsnitt, label="Gjennomsnittstemperatur")
+plt.plot(temperaturfall_tider, temperaturfall_values, label="Temperaturfall Maksimal til Minimal")
 plt.xlabel("Tid")
 plt.ylabel("Temperatur")
 plt.legend()
