@@ -1,6 +1,19 @@
 import datetime
 import matplotlib.pyplot as plt
 
+def glidende_gjennomsnitt(tider, temperaturer, n):
+    gyldige_tider = []
+    gjennomsnitt =[]
+
+    for i in range(n, len(temperaturer)-n):
+        temp_slice = temperaturer[i - n:i + n + 1]
+        gjennomsnitt_verdi = sum(temp_slice) / len(temp_slice)
+
+        gyldige_tider.append(tider[i])
+        gjennomsnitt.append(gjennomsnitt_verdi)
+
+    return gyldige_tider, gjennomsnitt
+
 temperaturer_met = []
 tider_met = []
 temperaturer = []
@@ -44,9 +57,13 @@ with open("trykk_og_temperaturlogg_rune_time.csv.txt", "r") as fil:
 tider_met_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tider_met]
 tider_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tider]
 
+n=30
+gyldige_tider, gjennomsnitt = glidende_gjennomsnitt(tider_dt, temperaturer, n)
+
 plt.figure(figsize=(10, 5))
 plt.plot(tider_met_dt, temperaturer_met, label="Måling fra Solas værstasjon")
 plt.plot(tider_dt, temperaturer, label="Måling fra UiS")
+plt.plot(gyldige_tider, gjennomsnitt, label="Gjennomsnittstemperatur")
 plt.xlabel("Tid")
 plt.ylabel("Temperatur")
 plt.title("Temperaturmålinger fra to kilder")
