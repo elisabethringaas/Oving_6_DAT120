@@ -32,7 +32,7 @@ with open("trykk_og_temperaturlogg_rune_time.csv.txt", "r") as fil:
             tid = Del[0]
             temperatur = Del[4].replace(',', '.')
             try:
-                dato_obj = datetime.datetime.strptime(tid, "%d.%m.%Y %H:%M")
+                dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
                 
                 tid_standard = dato_obj.strftime("%Y-%m-%d %H:%M:%S")
                 temperatur_float = float(temperatur)
