@@ -57,7 +57,11 @@ with open("trykk_og_temperaturlogg_rune_time.csv.txt", "r") as fil:
 
             if trykk_baro == (''):
                 try:
-                    dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
+                    if "am" in tid or "pm" in tid:    #Tar hensyn til pm og am
+                        dato_obj = datetime.datetime.strptime(tid, "%m/%d/%Y %I:%M:%S %p")
+                        print(dato_obj)
+                    else:
+                        dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
                     
                     tid_standard = dato_obj.strftime("%Y-%m-%d %H:%M:%S")
                     temperatur_float = float(temperatur)
@@ -70,7 +74,11 @@ with open("trykk_og_temperaturlogg_rune_time.csv.txt", "r") as fil:
                     pass
             else:
                 try:
-                    dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
+                    if "am" in tid or "pm" in tid:      #Tar hensyn til pm og am
+                        dato_obj = datetime.datetime.strptime(tid, "%m/%d/%Y %I:%M:%S %p")
+                        print(dato_obj)
+                    else:
+                        dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
                     
                     tid_standard = dato_obj.strftime("%Y-%m-%d %H:%M:%S")
                     temperatur_float = float(temperatur)
