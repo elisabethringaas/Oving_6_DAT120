@@ -58,8 +58,9 @@ with open("trykk_og_temperaturlogg_rune_time.csv.txt", "r") as fil:
             if trykk_baro == (''):
                 try:
                     if "am" in tid or "pm" in tid:    #Tar hensyn til pm og am
+                        if " 00:" in tid:
+                            tid = tid.replace("00:", "12:", 1)
                         dato_obj = datetime.datetime.strptime(tid, "%m/%d/%Y %I:%M:%S %p")
-                        print(dato_obj)
                     else:
                         dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
                     
@@ -75,8 +76,9 @@ with open("trykk_og_temperaturlogg_rune_time.csv.txt", "r") as fil:
             else:
                 try:
                     if "am" in tid or "pm" in tid:      #Tar hensyn til pm og am
+                        if " 00:" in tid:
+                            tid = tid.replace("00:", "12:", 1)
                         dato_obj = datetime.datetime.strptime(tid, "%m/%d/%Y %I:%M:%S %p")
-                        print(dato_obj)
                     else:
                         dato_obj = datetime.datetime.strptime(tid, "%m.%d.%Y %H:%M")
                     
