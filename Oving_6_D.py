@@ -136,9 +136,9 @@ plt.legend()
 
 plt.subplot(2, 1, 2)
 plt.title("Trykkvariasjoner")
-plt.plot(tider_met_dt, trykk_met, label = "Absoluttrykk MET") #Fungerer alene
-plt.plot(tider_dt, trykk_abs, label = "Absoluttrykk") #Fungerer alene
-plt.plot(tider_baro_dt, trykk_bar, label = "Barometrisk trykk") #Får den ikke opp,
+plt.plot(tider_met_dt, trykk_met, label = "Absoluttrykk MET") 
+plt.plot(tider_dt, trykk_abs, label = "Absoluttrykk")
+plt.plot(tider_baro_dt, trykk_bar, label = "Barometrisk trykk")
 plt.xlabel("Tid")
 plt.ylabel("Trykk")
 plt.legend()
