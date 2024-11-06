@@ -159,6 +159,13 @@ tid_sauda_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in 
 n=30
 gyldige_tider, gjennomsnitt = glidende_gjennomsnitt(tider_dt, temperaturer, n)
 
+trykk_diff = [abs_trykk - baro_trykk for abs_trykk, baro_trykk in zip(trykk_abs, trykk_bar) if abs_trykk is not None and baro_trykk is not None]
+tid_diff = [tid for tid, abs_trykk, baro_trykk in zip(tider_baro_dt, trykk_abs, trykk_bar) if abs_trykk is not None and baro_trykk is not None]
+
+n = 10
+gyldige_tider_diff = tid_diff[n:-n]
+gjennomsnitt_diff = [sum(trykk_diff[i-n:i+n+1]) / (2*n+1) for i in range(n, len(trykk_diff)-n)]
+
 start_tid = datetime.datetime(2021, 6, 11, 17, 31)
 slutt_tid = datetime.datetime(2021, 6, 12, 3, 5)
 
@@ -189,8 +196,8 @@ max_temp_UiS = int(max(temperaturer))
 min_temp_metro = int(min(temperaturer_met))
 max_temp_metro = int(max(temperaturer_met))
 
-plt.figure(figsize=(10, 5))
-plt.subplot(3, 1, 1)
+plt.figure(figsize=(10, 10))
+plt.subplot(4, 1, 1)
 plt.title("Temperaturmålinger fra to kilder")
 plt.plot(tider_met_dt, temperaturer_met, label="Måling fra Solas værstasjon")
 plt.plot(tider_dt, temperaturer, label="Måling fra UiS")
@@ -202,7 +209,7 @@ plt.xlabel("Tid")
 plt.ylabel("Temperatur")
 plt.legend()
 
-plt.subplot(3, 1, 2)
+plt.subplot(4, 1, 2)
 plt.title("Trykkvariasjoner")
 plt.plot(tider_met_dt, trykk_met, label = "Absoluttrykk MET") 
 plt.plot(tider_dt, trykk_abs, label = "Absoluttrykk")
@@ -213,6 +220,13 @@ plt.xlabel("Tid")
 plt.ylabel("Trykk")
 plt.legend()
 
+plt.subplot(4, 1, 3)
+plt.title("Differanse mellom absolutt og barometrisk trykk")
+plt.plot(gyldige_tider_diff, gjennomsnitt_diff, label="Trykkdifferanse")
+plt.xlabel("Tid")
+plt.ylabel("Trykkdifferanse")
+plt.legend()
+
 # Samle alle tidsdataene i én liste
 alle_tidspunkter = tider_met_dt + tider_dt + tider_baro_dt + tid_sauda_dt
 
@@ -221,13 +235,13 @@ plt.xlim([min(alle_tidspunkter), max(alle_tidspunkter)])
 
 # plt.xlim([min(tider_met_dt + tider_dt), max(tider_met_dt + tider_dt)])  # Sett grensene for x-aksenO
 
-plt.subplot(3, 2, 5)
+plt.subplot(4, 2, 7)
 plt.hist(temperaturer, bins=range(min_temp_UiS, max_temp_UiS + 2))
 plt.xlabel("Temperatur")
 plt.ylabel("Antall observasjoner")
 plt.title("Antall observerte temperaturer ved UiS")
 
-plt.subplot(3, 2, 6)
+plt.subplot(4, 2, 8)
 plt.hist(temperaturer_met, bins=range(min_temp_metro, max_temp_metro + 2))
 plt.xlabel("Temperatur")
 plt.ylabel("Antall observasjoner")
