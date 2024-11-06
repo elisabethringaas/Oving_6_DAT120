@@ -108,6 +108,9 @@ slutt_tid = datetime.datetime(2021, 6, 12, 3, 5)
 temperaturer_uis_filtered = []
 tider_uis_filtered = []
 
+temperaturer_met_filtered = []
+tider_met_filtered = []
+
 for tid, temperatur in zip(tider_dt, temperaturer):
     if start_tid <= tid <= slutt_tid:
         tider_uis_filtered.append(tid)
@@ -123,13 +126,29 @@ else:
     temperaturfall_tider = []
     temperaturfall_values = []
 
+for tid, temperatur in zip(tider_met_dt, temperaturer_met):
+    if start_tid <= tid <= slutt_tid:
+        tider_met_filtered.append(tid)
+        temperaturer_met_filtered.append(temperatur)
+
+if temperaturer_met_filtered:
+    max_temp_met = max(temperaturer_met_filtered)
+    min_temp_met = min(temperaturer_met_filtered)
+
+    temperaturfall_tider_met = [start_tid, slutt_tid]
+    temperaturfall_values_met = [max_temp_met, min_temp_met]
+else:
+    temperaturfall_tider_met = []
+    temperaturfall_values_met = []
+
 plt.figure(figsize=(10, 5))
 plt.subplot(2, 1, 1)
 plt.title("Temperaturmålinger fra to kilder")
 plt.plot(tider_met_dt, temperaturer_met, label="Måling fra Solas værstasjon")
 plt.plot(tider_dt, temperaturer, label="Måling fra UiS")
 plt.plot(gyldige_tider, gjennomsnitt, label="Gjennomsnittstemperatur")
-plt.plot(temperaturfall_tider, temperaturfall_values, label="Temperaturfall Maksimal til Minimal")
+plt.plot(temperaturfall_tider, temperaturfall_values, label="Temperaturfall Maksimal til Minimal for UiS")
+plt.plot(temperaturfall_tider_met, temperaturfall_values_met, label="Temperaturfall Maksimal til Minimal for Metrologisk")
 plt.xlabel("Tid")
 plt.ylabel("Temperatur")
 plt.legend()
