@@ -95,9 +95,66 @@ with open("trykk_og_temperaturlogg_rune_time.csv.txt", "r") as fil:
                 except ValueError:
                     pass
 
+#Lister for Sinnes og Sauda
+
+tid_sinnes = []
+tid_sauda = []
+temperatur_sinnes = []
+temperatur_sauda = []
+trykk_sinnes = []
+trykk_sauda = []
+
+
+with open("temperatur_trykk_sinnes_samme_tidsperiode.csv.txt", "r") as fil:
+    for linje in fil:
+        Del = linje.strip().split(';')             
+        if len(Del) >= 5:                      
+            tid = Del[2]                           
+            temperatur = Del[3].replace(',', '.')  
+            trykk = Del[4].replace(',', '.')
+            try:
+                if "am" in tid or "pm" in tid:      #Tar hensyn til pm og am
+                    dato_obj = datetime.datetime.strptime(tid, "%d/%m/%Y %I:%M:%S %p") 
+                else:
+                    dato_obj = datetime.datetime.strptime(tid, "%d.%m.%Y %H:%M")
+
+                tid_standard = dato_obj.strftime("%Y-%m-%d %H:%M:%S")  
+                temperatur_float = float(temperatur)
+                trykk_float = float(trykk)
+                tid_sinnes.append(tid_standard)
+                temperatur_sinnes.append(temperatur_float)               
+                trykk_sinnes.append(trykk_float)
+            except ValueError:                                          
+                pass
+
+with open("temperatur_trykk_sauda.csv.txt", "r") as fil:
+    for linje in fil:
+        Del = linje.strip().split(';')              
+        if len(Del) >= 5:                      
+            tid = Del[2]                           
+            temperatur = Del[3].replace(',', '.')  
+            trykk = Del[4].replace(',', '.')
+            try:
+                if "am" in tid or "pm" in tid:      #Tar hensyn til pm og am
+                    dato_obj = datetime.datetime.strptime(tid, "%d/%m/%Y %I:%M:%S %p") 
+                else:
+                    dato_obj = datetime.datetime.strptime(tid, "%d.%m.%Y %H:%M")
+
+                tid_standard = dato_obj.strftime("%Y-%m-%d %H:%M:%S")  
+                temperatur_float = float(temperatur)
+                trykk_float = float(trykk)
+                tid_sauda.append(tid_standard)
+                temperatur_sauda.append(temperatur_float)               
+                trykk_sauda.append(trykk_float)
+            except ValueError:                                          
+                pass
+
+
 tider_met_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tider_met]
 tider_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tider]
 tider_baro_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tider_baro]
+tid_sinnes_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tid_sinnes]
+tid_sauda_dt = [datetime.datetime.strptime(tid, "%Y-%m-%d %H:%M:%S") for tid in tid_sauda]
 
 n=30
 gyldige_tider, gjennomsnitt = glidende_gjennomsnitt(tider_dt, temperaturer, n)
@@ -107,9 +164,6 @@ slutt_tid = datetime.datetime(2021, 6, 12, 3, 5)
 
 temperaturer_uis_filtered = []
 tider_uis_filtered = []
-
-temperaturer_met_filtered = []
-tider_met_filtered = []
 
 for tid, temperatur in zip(tider_dt, temperaturer):
     if start_tid <= tid <= slutt_tid:
@@ -126,20 +180,8 @@ else:
     temperaturfall_tider = []
     temperaturfall_values = []
 
-for tid, temperatur in zip(tider_met_dt, temperaturer_met):
-    if start_tid <= tid <= slutt_tid:
-        tider_met_filtered.append(tid)
-        temperaturer_met_filtered.append(temperatur)
 
-if temperaturer_met_filtered:
-    max_temp_met = max(temperaturer_met_filtered)
-    min_temp_met = min(temperaturer_met_filtered)
 
-    temperaturfall_tider_met = [start_tid, slutt_tid]
-    temperaturfall_values_met = [max_temp_met, min_temp_met]
-else:
-    temperaturfall_tider_met = []
-    temperaturfall_values_met = []
 
 min_temp_UiS = int(min(temperaturer))
 max_temp_UiS = int(max(temperaturer))
@@ -148,35 +190,44 @@ min_temp_metro = int(min(temperaturer_met))
 max_temp_metro = int(max(temperaturer_met))
 
 plt.figure(figsize=(10, 5))
-plt.subplot(3, 1, 1)
+plt.subplot(4, 1, 1)
 plt.title("Temperaturmålinger fra to kilder")
 plt.plot(tider_met_dt, temperaturer_met, label="Måling fra Solas værstasjon")
 plt.plot(tider_dt, temperaturer, label="Måling fra UiS")
 plt.plot(gyldige_tider, gjennomsnitt, label="Gjennomsnittstemperatur")
-plt.plot(temperaturfall_tider, temperaturfall_values, label="Temperaturfall Maksimal til Minimal for UiS")
-plt.plot(temperaturfall_tider_met, temperaturfall_values_met, label="Temperaturfall Maksimal til Minimal for Metrologisk")
+plt.plot(temperaturfall_tider, temperaturfall_values, label="Temperaturfall Maksimal til Minimal")
+plt.plot(tid_sauda, temperatur_sauda, label = "Temperatur Sauda")
+plt.plot(tid_sinnes, temperatur_sinnes, label = "Temperatur Sinnes")
 plt.xlabel("Tid")
 plt.ylabel("Temperatur")
 plt.legend()
 
-plt.subplot(3, 1, 2)
+plt.subplot(4, 1, 7)
 plt.title("Trykkvariasjoner")
 plt.plot(tider_met_dt, trykk_met, label = "Absoluttrykk MET") 
 plt.plot(tider_dt, trykk_abs, label = "Absoluttrykk")
 plt.plot(tider_baro_dt, trykk_bar, label = "Barometrisk trykk")
+plt.plot(tid_sauda, trykk_sauda, label = "Trykk Sauda")
+plt.plot(tid_sinnes, trykk_sinnes, label = "Trykk Sinnes")
 plt.xlabel("Tid")
 plt.ylabel("Trykk")
 plt.legend()
 
-plt.xlim([min(tider_met_dt + tider_dt), max(tider_met_dt + tider_dt)])  # Sett grensene for x-aksenO
+# Samle alle tidsdataene i én liste
+alle_tidspunkter = tider_met_dt + tider_dt + tider_baro_dt + tid_sauda_dt
 
-plt.subplot(3, 2, 5)
+# Sett x-aksens grenser basert på minimums- og maksimumstidspunkt
+plt.xlim([min(alle_tidspunkter), max(alle_tidspunkter)])
+
+# plt.xlim([min(tider_met_dt + tider_dt), max(tider_met_dt + tider_dt)])  # Sett grensene for x-aksenO
+
+plt.subplot(4, 2, 5)
 plt.hist(temperaturer, bins=range(min_temp_UiS, max_temp_UiS + 2))
 plt.xlabel("Temperatur")
 plt.ylabel("Antall observasjoner")
 plt.title("Antall observerte temperaturer ved UiS")
 
-plt.subplot(3, 2, 6)
+plt.subplot(4, 2, 6)
 plt.hist(temperaturer_met, bins=range(min_temp_metro, max_temp_metro + 2))
 plt.xlabel("Temperatur")
 plt.ylabel("Antall observasjoner")
