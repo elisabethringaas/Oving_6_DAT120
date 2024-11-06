@@ -141,8 +141,14 @@ else:
     temperaturfall_tider_met = []
     temperaturfall_values_met = []
 
+min_temp_UiS = int(min(temperaturer))
+max_temp_UiS = int(max(temperaturer))
+
+min_temp_metro = int(min(temperaturer_met))
+max_temp_metro = int(max(temperaturer_met))
+
 plt.figure(figsize=(10, 5))
-plt.subplot(2, 1, 1)
+plt.subplot(3, 1, 1)
 plt.title("Temperaturmålinger fra to kilder")
 plt.plot(tider_met_dt, temperaturer_met, label="Måling fra Solas værstasjon")
 plt.plot(tider_dt, temperaturer, label="Måling fra UiS")
@@ -153,7 +159,7 @@ plt.xlabel("Tid")
 plt.ylabel("Temperatur")
 plt.legend()
 
-plt.subplot(2, 1, 2)
+plt.subplot(3, 1, 2)
 plt.title("Trykkvariasjoner")
 plt.plot(tider_met_dt, trykk_met, label = "Absoluttrykk MET") 
 plt.plot(tider_dt, trykk_abs, label = "Absoluttrykk")
@@ -163,6 +169,18 @@ plt.ylabel("Trykk")
 plt.legend()
 
 plt.xlim([min(tider_met_dt + tider_dt), max(tider_met_dt + tider_dt)])  # Sett grensene for x-aksenO
+
+plt.subplot(3, 2, 5)
+plt.hist(temperaturer, bins=range(min_temp_UiS, max_temp_UiS + 2))
+plt.xlabel("Temperatur")
+plt.ylabel("Antall observasjoner")
+plt.title("Antall observerte temperaturer ved UiS")
+
+plt.subplot(3, 2, 6)
+plt.hist(temperaturer_met, bins=range(min_temp_metro, max_temp_metro + 2))
+plt.xlabel("Temperatur")
+plt.ylabel("Antall observasjoner")
+plt.title("Antall observerte temperaturer av Metrologisk institutt")
 
 
 plt.xticks(rotation=45)
