@@ -317,10 +317,10 @@ tid_min_trykk_diff = tidspunkter[trykk_differanser.index(min_trykk_diff)]
 
 # Utskrift av resultatene
 print(f"Gjennomsnittlig temperaturforskjell: {gjennomsnitt_temp_diff:.2f}°C")
-print(f"Gjennomsnittlig trykkforskjell: {gjennomsnitt_trykk_diff:.2f}")
+print(f"Gjennomsnittlig trykkforskjell: {gjennomsnitt_trykk_diff:.2f} hPa")
 
 print(f"Største temperaturforskjell på {maks_temp_diff:.2f}°C ved {tid_maks_temp_diff}")
 print(f"Laveste temperaturforskjell på {min_temp_diff:.2f}°C ved {tid_min_temp_diff}")
 
-print(f"Største trykkforskjell på {maks_trykk_diff:.2f} ved {tid_maks_trykk_diff}")
-print(f"Laveste trykkforskjell på {min_trykk_diff:.2f} ved {tid_min_trykk_diff}")
+print(f"Største trykkforskjell på {maks_trykk_diff:.2f} hPa ved {tid_maks_trykk_diff}")
+print(f"Laveste trykkforskjell på {min_trykk_diff:.2f} hPa ved {tid_min_trykk_diff}")
