@@ -257,12 +257,11 @@ plt.ylabel("Temperatur")
 plt.legend()
 
 # Samle alle tidsdataene i én liste
-alle_tidspunkter = tider_met_dt + tider_dt + tider_baro_dt + tid_sauda_dt
+alle_tidspunkter = tider_met_dt + tider_dt + tider_baro_dt + tid_sauda_dt + tid_sinnes_dt
 
 # Sett x-aksens grenser basert på minimums- og maksimumstidspunkt
 plt.xlim([min(alle_tidspunkter), max(alle_tidspunkter)])
 
-# plt.xlim([min(tider_met_dt + tider_dt), max(tider_met_dt + tider_dt)])  # Sett grensene for x-aksenO
 
 plt.subplot(5, 2, 9)
 plt.hist(temperaturer, bins=range(min_temp_UiS, max_temp_UiS + 2))
@@ -280,3 +279,48 @@ plt.title("Antall observerte temperaturer av Metrologisk institutt")
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
+
+#Oppgave e)
+# Lister for å lagre forskjellene og tilhørende tidspunkter
+temperatur_differanser = []
+trykk_differanser = []
+tidspunkter = []
+
+for i in range(len(tider_met_dt)): #løkke for å finne samsvarende tidspunkter
+    met_tid = tider_met_dt[i]
+    if met_tid in tider_dt:
+        j = tider_dt.index(met_tid)
+        
+        # Beregn forskjellen i temperatur og trykk
+        temp_diff = abs(temperaturer_met[i] - temperaturer[j])
+        trykk_diff = abs(trykk_met[i] - trykk_abs[j])
+        
+        # Legg til i lister for forskjeller og tidspunkt
+        temperatur_differanser.append(temp_diff)
+        trykk_differanser.append(trykk_diff)
+        tidspunkter.append(met_tid)
+
+# Beregn gjennomsnittlig forskjell
+gjennomsnitt_temp_diff = sum(temperatur_differanser) / len(temperatur_differanser)
+gjennomsnitt_trykk_diff = sum(trykk_differanser) / len(trykk_differanser)
+
+# Finn tidspunktene med høyeste og laveste forskjell for temperatur og trykk
+maks_temp_diff = max(temperatur_differanser)
+min_temp_diff = min(temperatur_differanser)
+maks_trykk_diff = max(trykk_differanser)
+min_trykk_diff = min(trykk_differanser)
+
+tid_maks_temp_diff = tidspunkter[temperatur_differanser.index(maks_temp_diff)]
+tid_min_temp_diff = tidspunkter[temperatur_differanser.index(min_temp_diff)]
+tid_maks_trykk_diff = tidspunkter[trykk_differanser.index(maks_trykk_diff)]
+tid_min_trykk_diff = tidspunkter[trykk_differanser.index(min_trykk_diff)]
+
+# Utskrift av resultatene
+print(f"Gjennomsnittlig temperaturforskjell: {gjennomsnitt_temp_diff:.2f}°C")
+print(f"Gjennomsnittlig trykkforskjell: {gjennomsnitt_trykk_diff:.2f}")
+
+print(f"Største temperaturforskjell på {maks_temp_diff:.2f}°C ved {tid_maks_temp_diff}")
+print(f"Laveste temperaturforskjell på {min_temp_diff:.2f}°C ved {tid_min_temp_diff}")
+
+print(f"Største trykkforskjell på {maks_trykk_diff:.2f} ved {tid_maks_trykk_diff}")
+print(f"Laveste trykkforskjell på {min_trykk_diff:.2f} ved {tid_min_trykk_diff}")
